@@ -8,18 +8,11 @@ import com.example.demo.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import static com.example.demo.controller.UserController.getUserName;
+
 
 @CrossOrigin("https://www.hezheng.xyz")
 @RestController
@@ -32,6 +25,12 @@ public class ArticleController {
 
     @PostMapping("/add")
     public Result add(@RequestBody Article article) {
+
+        if(article.getCreateTime() == null){
+            article.setCreateTime(LocalDateTime.now());
+        }
+
+        article.setCreateBy(getUserName());
         articleDao.save(article);
         return Result.success("写入成功");
     }

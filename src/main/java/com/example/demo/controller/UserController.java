@@ -6,6 +6,8 @@ import com.example.demo.mapper.UserDao;
 import com.example.demo.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,6 +41,20 @@ public class UserController {
     private UserDao userDao;
 
     public static Map<String,User> userMap = new HashMap<>();
+
+
+    public static String getUserName(){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            String values = request.getHeader("x-header");
+            User user = userMap.get(values);
+            if (user != null) {
+                return user.getName();
+            }
+        }
+        return null;
+    }
 
 
     public User getUser() {
